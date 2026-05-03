@@ -1,2 +1,2 @@
 #define PACKAGE_H
-int packageAnalysis();
+int packageAnalysis(const char* flag, char *package);

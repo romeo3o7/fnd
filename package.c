@@ -18,16 +18,17 @@
     };
 
     int packageAnalysis(const char* flag, char *package) {
-        char * path; char **arg, **temp;
+        char * path; char *arg[8], **temp;
         for (size_t i = 0; i < 5; i++) {
             if (strcmp(flag, ops[i].flag) == 0) {
                 path = ops[i].path;
                 temp = ops[i].args;
                 break;
             }
+            if (i == 4) return 400;
         }
         size_t t = 0;
-        while (temp != NULL && t < 6 ) {
+        while ( t < 6 && temp[t] != NULL  ) {
             arg[t] = temp[t];
             ++t;
         }
