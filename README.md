@@ -1,10 +1,10 @@
-a helper package for dnf
-\n
-compilation 
-make 
+a helper package for dnf/
 
-fnd update:
-starts invoke_update() which updates and handels offline or local updating, removing orphans and package caches. 
+compilation/ 
+make/ 
 
-fnd pacage: 
-shows options for package analysis like metadata, the files a package installed or the packages it depends on. 
+fnd update:/
+starts invoke_update() which updates and handels offline or local updating, removing orphans and package caches. /
+
+fnd pacage: /
+shows options for package analysis like metadata, the files a package installed or the packages it depends on./
