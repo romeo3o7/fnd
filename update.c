@@ -80,7 +80,7 @@ int offlineActions() {
     break;
     }
     if (buffer[0] == 'y') {
-    char * argument[] = {"sudo", "dnf5" , "reboot" , "offline" , NULL};
+    char * argument[] = {"sudo", "dnf5" , "offline" , "reboot" , NULL};
     return task("sudo",argument);
     }
     return -1;
