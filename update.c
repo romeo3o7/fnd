@@ -21,23 +21,22 @@ int update() {
     printf("update found!\n");
     printf("would you like an offline or online update?\n");
     printf("offline if the update includes: kernel,libc,systemd,mesa.\n");
-    printf("'o' for online and 'f' for offline\n");
+    printf("'o' for online and 'f' for offline: ");
     char *online[] = { "sudo" , "dnf" , "upgrade" , NULL} , *offline[] = {"sudo" , "dnf" , "upgrade" , "--offline" , NULL};
     char **update;
     char buffer[8];
     int reboot = 0;
     while(1) {
-    char *input= fgets(buffer, sizeof(buffer) , stdin);
-    if (input != NULL && (buffer[0] == 'o' || buffer[0] == 'f')) { // if pointer input is not null and first value of buffer is either 'o' or 'f'
+        char *input= fgets(buffer, sizeof(buffer) , stdin);
+        if (input != NULL && (buffer[0] == 'o' || buffer[0] == 'f')) { // if pointer input is not null and first value of buffer is either 'o' or 'f'
        if (buffer[0] == 'f') {
            update = offline;
            reboot = 1;
        }
        else update = online;
-    fflush(stdout);
-    break;
-    }
-     printf("wrong input, try again\n");
+       fflush(stdout);
+       break;
+        }
     }
     int updateStatus = task("sudo",update);
     if (updateStatus != 0) {
@@ -66,24 +65,19 @@ int clearOrphans() {
     return 0;
 }
 int offlineActions() {
-    printf("Offline transactions are avaliable would you like to update now? y/n\n");
+    printf("Offline transactions are avaliable would you like to update now? y/n: ");
+    fflush(stdout);
     char buffer[8];
     while (1) {
     char *input = fgets(buffer, sizeof(buffer),stdin);
     if (input == NULL) {
         return -1;
     }
-    if ( buffer[0] != 'y' && buffer[0] != 'n') {
-        printf("wrong input try again\n");
-        continue;
-    }
+    if ( buffer[0] != 'y' && buffer[0] != 'n') continue;
     break;
     }
-    if (buffer[0] == 'y') {
     char * argument[] = {"sudo", "dnf5" , "offline" , "reboot" , NULL};
     return task("sudo",argument);
-    }
-    return -1;
 }
 
 int invoke_update() {
