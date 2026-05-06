@@ -28,6 +28,7 @@ int main (int argc, char *argv[]) {
         }
         else echo_general();
     }
+    else echo_general();
     return status;
 }
 
