@@ -12,7 +12,7 @@ int task(char*path,char *argument[]) {
 	    exit(EXIT_FAILURE);
 	} else if (childProcess == -1) {
 	    fprintf(stderr, "child failed , fork stage\n");
-	    return 1;
+	    return -1;
 	    }
 	// parent
 	int childProcessStatus;

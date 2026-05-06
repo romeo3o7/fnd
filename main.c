@@ -8,26 +8,27 @@ void echo_general();
 void echo_package();
 
 int main (int argc, char *argv[]) {
+    int status = 0;
     if (argc == 1) {
         echo_general();
         exit(1);
     }
     else if (argc == 2) {
-        if (strcmp(argv[1],"update") == 0) invoke_update();
+        if (strcmp(argv[1],"update") == 0) status = invoke_update();
         else if (strcmp(argv[1],"package") == 0) echo_package();
         else {
             echo_general();
             exit(1);
         }
     }
-    else if (argc >= 3 ) {
-        if (strcmp(argv[1],"package") == 0 && argv[2] != NULL && argv[3] != NULL) {
-            int status = packageAnalysis(argv[2] , argv[3]);
+    else if (argc >= 4 ) {
+        if (strcmp(argv[1],"package") == 0) {
+            status = packageAnalysis(argv[2] , argv[3]);
             if (status == 400) fprintf(stderr,"Flag not found");
         }
         else echo_general();
     }
-    return 0;
+    return status;
 }
 
 void echo_package() {
