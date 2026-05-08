@@ -51,11 +51,12 @@ int cacheCount() {
     const char *home = getenv("HOME"); // get the home path
     const char *file = "/.local/share/fnd/cacheClearingCounter"; // path where the file should go
     char *dir = concatStrings(home, "/.local/share/fnd");
-    if (createDirctory(dir) != 0) return 1;
+    if (createDirctory(dir) != 0) return -1;
     char *filePath = concatStrings(home,file);
     int fd = open(filePath, O_CREAT | O_RDWR , 00600); // open the file or create it
     if ( fd < 0 ) {
         perror("failed to open/create file");
+        buffer = -1;
         goto exit;
     }
     int values[] = {1,2,3}; // possible values

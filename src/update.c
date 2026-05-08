@@ -57,6 +57,7 @@ int clearCache() { // improvment to only delete all packages on the third update
     char *arguments[] = {"sudo" , "dnf" , "clean" , "all" , NULL};
     return task("sudo", arguments);
     }
+    else if (cacheStatus == -1 ) return -1;
     printf("cache is not cleared\n");
     printf("the counter is at %d , iterations {1,2,3}, when it hits 3, cache will be cleared \n" , cacheStatus);
     return 0;
@@ -76,8 +77,8 @@ int offlineActions() {
         printf("Offline transactions are avaliable would you like to update now [y/n]?  ");
         fflush(stdout);
         char *input = fgets(buffer, sizeof(buffer),stdin);
-        char c = tolower(buffer[0]);
         if (input == NULL)     return -1;
+        char c = tolower(buffer[0]);
         if (c == 'n')          return 1;
         if (c == 'y')          break;
     }
