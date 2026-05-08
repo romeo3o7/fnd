@@ -20,7 +20,7 @@ Runs the full update workflow:
 - Prompts for an online or offline update
   - **online** — applies updates immediately
   - **offline** — stages updates to be applied on next reboot (recommended for kernel, libc, systemd, mesa)
-- Clears the DNF package cache
+- Clears the DNF package cache only after the thrid update completes
 - Removes orphaned packages via `dnf autoremove`
 - If an offline update was staged, prompts to reboot and apply
 
