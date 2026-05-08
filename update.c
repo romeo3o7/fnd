@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "include/child.h"
+#include "include/file.h"
 
 int checkUpdate() {
     printf("Checking update...\n");
@@ -48,11 +49,17 @@ int update() {
     return reboot;
 }
 
-int clearCache() { // future improvment to only delete all packages on the third update
+int clearCache() { // improvment to only delete all packages on the third update
     printf("clearing cache .. : ");
     fflush(stdout);
+    int cacheStatus = cacheCount();
+    if (cacheStatus == 3) {
     char *arguments[] = {"sudo" , "dnf" , "clean" , "all" , NULL};
     return task("sudo", arguments);
+    }
+    printf("cache is not cleared\n");
+    printf("the counter is at %d , iterations {1,2,3}, when it hits 1, cache will be cleared \n" , cacheStatus);
+    return 0;
 }
 
 int clearOrphans() {

@@ -8,7 +8,7 @@ int task(char*path,char *argument[]) {
  pid_t childProcess = fork();
 	if (childProcess == 0) {
 	    execvp(path, argument); // here child is gone if succesful
-	    perror("child failed, execv stage\n");
+	    perror("child failed, execv stage\n"); // this part is only reached when the child fails
 	    exit(EXIT_FAILURE);
 	} else if (childProcess == -1) {
 	    fprintf(stderr, "child failed , fork stage\n");
