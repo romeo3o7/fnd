@@ -1,7 +1,7 @@
 .PHONY: build rebuild clean
 
 build:
-	gcc main.c package.c update.c child.c file.c -o fnd
+	gcc main.c src/package.c src/update.c src/child.c src/file.c -o fnd
 
 rebuild: clean build
 

@@ -1,6 +1,6 @@
 #include <string.h>
 #include <stddef.h>
-#include "include/child.h"
+#include "../include/child.h"
 
     typedef struct {
         char *flag;

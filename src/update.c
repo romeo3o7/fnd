@@ -1,8 +1,8 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/child.h"
-#include "include/file.h"
+#include "../include/child.h"
+#include "../include/file.h"
 
 int checkUpdate() {
     printf("Checking update...\n");
@@ -58,7 +58,7 @@ int clearCache() { // improvment to only delete all packages on the third update
     return task("sudo", arguments);
     }
     printf("cache is not cleared\n");
-    printf("the counter is at %d , iterations {1,2,3}, when it hits 1, cache will be cleared \n" , cacheStatus);
+    printf("the counter is at %d , iterations {1,2,3}, when it hits 3, cache will be cleared \n" , cacheStatus);
     return 0;
 }
 
