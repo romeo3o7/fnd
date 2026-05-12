@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,7 +6,7 @@
 #include <sys/wait.h>
 
 int task(char*path,char *argument[]) {
- pid_t childProcess = fork();
+    pid_t childProcess = fork();
 	if (childProcess == 0) {
 	    execvp(path, argument); // here child is gone if succesful
 	    perror("child failed, execv stage\n"); // this part is only reached when the child fails
@@ -25,4 +26,20 @@ int task(char*path,char *argument[]) {
 	    return -1;
 	}
 	return -1;
+}
+int silentTask(char *path, char *args[]) {
+    pid_t child = fork();
+    if (child == 0) {
+        int devNull = open("/dev/null", O_WRONLY);
+        dup2(devNull, STDOUT_FILENO);
+        dup2(devNull, STDERR_FILENO);
+        close(devNull);
+        execvp(path, args);
+        exit(EXIT_FAILURE);
     }
+    if (child == -1) return -1;
+    int status;
+    waitpid(child, &status, 0);
+    if (WIFEXITED(status)) return WEXITSTATUS(status);
+    return -1;
+}
