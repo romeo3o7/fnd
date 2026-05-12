@@ -38,12 +38,12 @@ char * concatStrings(const char *s1 , const char *s2) {
 
 int readValue(int fd , char *buffer) {
     lseek(fd,0,SEEK_SET);
-    return read(fd, buffer, sizeof(int));
+    return read(fd, buffer, sizeof(char));
 }
 
 void writeValue(int fd , char* value) {
     lseek(fd,0,SEEK_SET);
-    write(fd , value , sizeof(int) );
+    write(fd , value , sizeof(char) );
 }
 
 int cacheCount() {

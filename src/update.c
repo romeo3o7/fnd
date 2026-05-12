@@ -55,7 +55,7 @@ int clearCache() { // improvment to only delete all packages on the third update
     if (cacheStatus == 4) {
     char *arguments[] = {"sudo" , "dnf" , "clean" , "all" , NULL};
     return task("sudo", arguments);
-    } else if (cacheStatus == -1 ) return -1;
+    } else if (cacheStatus < 0 ) return -1;
     printf("cache is not cleared\n");
     printf("the counter is at %d , iterations {1,2,3,4}, when it hits 4, cache will be cleared \n" , cacheStatus);
     return 0;
