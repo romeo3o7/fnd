@@ -9,14 +9,13 @@ int checkUpdate() {
     char *updateChecking[] = {"sudo" , "dnf" , "check-update" , "--refresh" , NULL};
     int checkStatus = task("sudo",updateChecking);
     if (checkStatus != 100 && checkStatus != 0) {
-        fprintf(stderr ,"updating failed");
+        fprintf(stderr ,"updating failed\n");
         return -1;
-    }
-    else if (checkStatus == 0) {
+    } else if (checkStatus == 0) {
         printf("Up to date\n");
-        return 1;
+        return 0;
     }
-    return 0;
+    return 1;
 }
 
 int update() {
@@ -28,16 +27,16 @@ int update() {
     char buffer[8];
     int reboot = 0;
     while(1) {
-        printf("'l' for local and 'f' for offline [l/f]? ");
+        printf("'l' for local and 'f' for offline 'c' to cancel [l/f/c]? ");
         fflush(stdout);
         char *input= fgets(buffer, sizeof(buffer) , stdin);
         if (input == NULL) return -1;
         char c = tolower(buffer[0]);
         if (c == 'l' || c == 'f') {
-            update = (c == 'f') ?  offline : online;
-            reboot = (c == 'f');
+            update = (c == 'f') ?  offline : online;  // update equals offline if the conditon is true
+            reboot = (c == 'f');                      // if c equals f : reboot = true or 1
             break;
-        }
+        } else if (c == 'c') exit(0);
     }
     int updateStatus = task("sudo",update);
     if (updateStatus != 0) {
@@ -53,13 +52,12 @@ int clearCache() { // improvment to only delete all packages on the third update
     printf("clearing cache .. : ");
     fflush(stdout);
     int cacheStatus = cacheCount();
-    if (cacheStatus == 3) {
+    if (cacheStatus == 4) {
     char *arguments[] = {"sudo" , "dnf" , "clean" , "all" , NULL};
     return task("sudo", arguments);
-    }
-    else if (cacheStatus == -1 ) return -1;
+    } else if (cacheStatus == -1 ) return -1;
     printf("cache is not cleared\n");
-    printf("the counter is at %d , iterations {1,2,3}, when it hits 3, cache will be cleared \n" , cacheStatus);
+    printf("the counter is at %d , iterations {1,2,3,4}, when it hits 4, cache will be cleared \n" , cacheStatus);
     return 0;
 }
 
@@ -68,8 +66,7 @@ int clearOrphans() {
     fflush(stdout);
     char *arguments[] = {"sudo" , "dnf" , "autoremove" , NULL};
     int orphanStatus = task("sudo" , arguments);
-    if (orphanStatus == 0) printf("no orphaned packages found\n");
-    return 0;
+    return orphanStatus;
 }
 int offlineActions() {
     char buffer[8];
@@ -79,7 +76,7 @@ int offlineActions() {
         char *input = fgets(buffer, sizeof(buffer),stdin);
         if (input == NULL)     return -1;
         char c = tolower(buffer[0]);
-        if (c == 'n')          return 1;
+        if (c == 'n')          return 0;
         if (c == 'y')          break;
     }
     char * argument[] = {"sudo", "dnf5" , "offline" , "reboot" , NULL};
@@ -93,11 +90,11 @@ int offlineActions() {
 
 int invoke_update() {
     int checkUpdateStatus = checkUpdate();
-    if (checkUpdateStatus != 0) return checkUpdateStatus;
+    if (checkUpdateStatus != 1 ) return checkUpdateStatus;
     int updateStaus = update();
     if (updateStaus == -1) return -1;
     int cacheStatus = clearCache();
-    int clearOrphansStatsu = clearOrphans();
+    int clearOrphansStatus = clearOrphans();
     if (updateStaus == 1) return offlineActions();
     return 0;
 }
