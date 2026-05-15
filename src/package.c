@@ -25,6 +25,10 @@ static operations notInstalled[] = {
     {NULL, NULL, {NULL}}
 };
 _Bool checkInstalled(char *package) {
+    size_t len = strlen(package);
+    for (size_t i = 0; i < len; i++ ) {
+        if (package[i] == '/') return access(package, F_OK) == 0;
+    }
 	char *args[] = {"rpm" , "-q" , package , NULL};
 	int exits = silentTask("rpm" ,  args);
 	if (exits == -1) exit(-1);
