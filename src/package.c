@@ -24,7 +24,7 @@ static operations notInstalled[] = {
     {"-o" , "dnf" , {"dnf", "provides"}},
     {NULL, NULL, {NULL}}
 };
-_Bool checkInstalled(char *package) {
+_Bool checkInstalled(char *package) { // if this function returns 1 we query rpm, otherwise we query dnf
     size_t len = strlen(package);
     for (size_t i = 0; i < len; i++ ) {
         if (package[i] == '/') return access(package, F_OK) == 0;
@@ -32,8 +32,7 @@ _Bool checkInstalled(char *package) {
 	char *args[] = {"rpm" , "-q" , package , NULL};
 	int exits = silentTask("rpm" ,  args);
 	if (exits == -1) exit(-1);
-	if (exits ==  0) return 1;
-	return 0;
+	return exits == 0;	
 }
 int packageAnalysis(const char* flag, char *package) {
     operations *array = checkInstalled(package) ? installed : notInstalled;

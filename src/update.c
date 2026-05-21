@@ -27,7 +27,7 @@ int update() {
     char buffer[8];
     int reboot = 0;
     while(1) {
-        printf("'l' for local and 'f' for offline 'c' to cancel [l/f/c]? ");
+        printf("[l]ocal , o[f]fline , [c]ancel [l/f/c]? ");
         fflush(stdout);
         char *input= fgets(buffer, sizeof(buffer) , stdin);
         if (input == NULL) return -1;
@@ -79,7 +79,7 @@ int offlineActions() {
         if (c == 'n')          return 0;
         if (c == 'y')          break;
     }
-    char * argument[] = {"sudo", "dnf5" , "offline" , "reboot" , NULL};
+    char * argument[] = {"sudo", "dnf5" , "offline" , "reboot" , "-y" , NULL};
     int status = task("sudo",argument);
     if (status != 0) {
         fprintf(stderr, "dnf5 is not installed\n");
@@ -93,8 +93,8 @@ int invoke_update() {
     if (checkUpdateStatus != 1 ) return checkUpdateStatus;
     int updateStaus = update();
     if (updateStaus == -1) return -1;
-    int cacheStatus = clearCache();
-    int clearOrphansStatus = clearOrphans();
+    if ( clearCache() == -1 ) return -1;
+    clearOrphans();
     if (updateStaus == 1) return offlineActions();
     return 0;
 }
