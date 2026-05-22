@@ -1,9 +1,4 @@
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
+#include "../include/child.h"
 
 int task(char*path,char *argument[]) {
     pid_t childProcess = fork();

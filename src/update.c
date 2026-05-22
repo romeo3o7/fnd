@@ -1,8 +1,15 @@
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "../include/child.h"
-#include "../include/file.h"
+#include "../include/update.h"
+
+int invoke_update() {
+    int checkUpdateStatus = checkUpdate();
+    if (checkUpdateStatus != 1 ) return checkUpdateStatus;
+    int updateStaus = update();
+    if (updateStaus == -1) return -1;
+    if ( clearCache() == -1 ) return -1;
+    clearOrphans();
+    if (updateStaus == 1) return offlineActions();
+    return 0;
+}
 
 int checkUpdate() {
     printf("Checking update...\n");
@@ -86,15 +93,4 @@ int offlineActions() {
         return 1;
     }
    return 0;
-}
-
-int invoke_update() {
-    int checkUpdateStatus = checkUpdate();
-    if (checkUpdateStatus != 1 ) return checkUpdateStatus;
-    int updateStaus = update();
-    if (updateStaus == -1) return -1;
-    if ( clearCache() == -1 ) return -1;
-    clearOrphans();
-    if (updateStaus == 1) return offlineActions();
-    return 0;
 }

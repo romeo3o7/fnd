@@ -1,10 +1,45 @@
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include "../include/file.h"
+
+int cacheCount() {
+    char buffer = '0';
+    char values[] = {'1','2','3','4'}; // possible values
+
+    const char *home = getenv("HOME"); // get the home path
+    const char *file = "/.cache/fnd/cacheClearingCounter"; // path where the file should go
+
+    char *dir = concatStrings(home, "/.cache/fnd"); // create a full path to the directory
+    if (createDirctory(dir) != 0) { free(dir); return -1; } // if creating the dir fails return -1
+    char *filePath = concatStrings(home,file);                // create the string for the full path
+
+    int fd = open(filePath, O_CREAT | O_RDWR , 00600); // open the file fd or create it
+    if ( fd < 0 ) {
+        perror("failed to open/create file");
+        buffer = -1;
+        goto exit;
+    }
+
+    if (readValue(fd, &buffer) == 0) {   //if file is empty
+        writeValue(fd, &values[0]); // write 1 to the file
+        goto exit;
+    }
+
+    if (buffer == '1') {
+        writeValue(fd, &values[1]);
+    } else if (buffer == '2') {
+        writeValue(fd, &values[2]);
+    } else if (buffer == '3') {
+        writeValue(fd, &values[3]);
+    } else if (buffer == '4') {
+        writeValue(fd, &values[0]);
+    }
+
+    exit:
+    free(dir);
+    free(filePath);
+    close(fd);
+
+    return buffer - '0';
+}
 
 int createDirctory(const char *s) {
     int exitStatus = mkdir(s,0700);
@@ -44,41 +79,4 @@ int readValue(int fd , char *buffer) {
 void writeValue(int fd , char* value) {
     lseek(fd,0,SEEK_SET);
     write(fd , value , sizeof(char) );
-}
-
-int cacheCount() {
-    char buffer = '0';
-    const char *home = getenv("HOME"); // get the home path
-    const char *file = "/.cache/fnd/cacheClearingCounter"; // path where the file should go
-    char *dir = concatStrings(home, "/.cache/fnd"); // create a full path to the directory
-    if (createDirctory(dir) != 0) { free(dir); return -1; } // if creating the dir fails return -1
-    char *filePath = concatStrings(home,file);                // create the string for the full path
-    int fd = open(filePath, O_CREAT | O_RDWR , 00600); // open the file fd or create it
-    if ( fd < 0 ) {
-        perror("failed to open/create file");
-        buffer = -1;
-        goto exit;
-    }
-    char values[] = {'1','2','3','4'}; // possible values
-    if (readValue(fd, &buffer) == 0) {   //if file is empty
-        writeValue(fd, &values[0]); // write 1 to the file
-        goto exit;
-    }
-
-    if (buffer == '1') {
-        writeValue(fd, &values[1]);
-    } else if (buffer == '2') {
-        writeValue(fd, &values[2]);
-    } else if (buffer == '3') {
-        writeValue(fd, &values[3]);
-    } else if (buffer == '4') {
-        writeValue(fd, &values[0]);
-    }
-
-    exit:
-    free(dir);
-    free(filePath);
-    close(fd);
-
-    return buffer - '0';
 }

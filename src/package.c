@@ -1,13 +1,5 @@
-#include <stdlib.h>
-#include <string.h>
-#include <stddef.h>
-#include "../include/child.h"
-#include <unistd.h>
-typedef struct {
-    char *flag;
-    char *path;
-    char *args[6];
-} operations;
+#include "../include/package.h"
+
 static operations installed[] = {
     {"-f" , "rpm" , {"rpm", "-ql"} },
     {"-m" , "rpm" , {"rpm", "-qi"} },
@@ -24,16 +16,7 @@ static operations notInstalled[] = {
     {"-o" , "dnf" , {"dnf", "provides"}},
     {NULL, NULL, {NULL}}
 };
-_Bool checkInstalled(char *package) { // if this function returns 1 we query rpm, otherwise we query dnf
-    size_t len = strlen(package);
-    for (size_t i = 0; i < len; i++ ) {
-        if (package[i] == '/') return access(package, F_OK) == 0;
-    }
-	char *args[] = {"rpm" , "-q" , package , NULL};
-	int exits = silentTask("rpm" ,  args);
-	if (exits == -1) exit(-1);
-	return exits == 0;	
-}
+
 int packageAnalysis(const char* flag, char *package) {
     operations *array = checkInstalled(package) ? installed : notInstalled;
     _Bool flagFound = 0;
@@ -56,4 +39,15 @@ int packageAnalysis(const char* flag, char *package) {
     arg[++t] = NULL;
     if (task(path,arg) != 0 ) return 1;
     return 0;
+}
+
+bool checkInstalled(char *package) { // if this function returns 1 we query rpm, otherwise we query dnf
+    size_t len = strlen(package);
+    for (size_t i = 0; i < len; i++ ) {
+        if (package[i] == '/') return access(package, F_OK) == 0; // if package has / then its a file, access to return 1 if it exists
+    }
+	char *args[] = {"rpm" , "-q" , package , NULL};
+	int exits = silentTask("rpm" ,  args);
+	if (exits == -1) exit(-1);
+	return exits == 0;
 }
