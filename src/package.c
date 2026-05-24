@@ -1,28 +1,27 @@
 #include "../include/package.h"
 
 static operations installed[] = {
-    {"-f" , "rpm" , {"rpm", "-ql"} },
-    {"-m" , "rpm" , {"rpm", "-qi"} },
-    {"-d" , "rpm" , {"rpm", "-qR"} },
-    {"-r" , "rpm" , {"rpm", "-q", "--whatrequires"} },
-    {"-o" , "rpm" , {"rpm", "-qf"}},
-    {NULL, NULL, {NULL}}
+    {'f' , "rpm" , {"rpm", "-ql"} },
+    {'m' , "rpm" , {"rpm", "-qi"} },
+    {'d' , "rpm" , {"rpm", "-qR"} },
+    {'r' , "rpm" , {"rpm", "-q", "--whatrequires"} },
+    {'o' , "rpm" , {"rpm", "-qf"}},
 };
 static operations notInstalled[] = {
-	{"-f" , "dnf" , {"dnf", "repoquery" , "-l"} },
-    {"-m" , "dnf" , {"dnf", "info"} },
-    {"-d" , "dnf" , {"dnf", "repoquery" , "--requires"} },
-    {"-r" , "dnf" , {"dnf", "repoquery", "--whatrequires"} },
-    {"-o" , "dnf" , {"dnf", "provides"}},
-    {NULL, NULL, {NULL}}
+    {'f' , "dnf" , {"dnf", "repoquery" , "-l"} },
+    {'m' , "dnf" , {"dnf", "info"} },
+    {'d' , "dnf" , {"dnf", "repoquery" , "--requires"} },
+    {'r' , "dnf" , {"dnf", "repoquery", "--whatrequires"} },
+    {'o' , "dnf" , {"dnf", "provides"}},
 };
 
 int packageAnalysis(const char* flag, char *package) {
     operations *array = checkInstalled(package) ? installed : notInstalled;
-    _Bool flagFound = 0;
+    int len = sizeof array + sizeof array[0];
+    bool flagFound = 0;
     char * path, *arg[8], **temp;
-    for (int i = 0; array[i].flag != NULL ; i++) {
-        if (strcmp(flag, array[i].flag) == 0) {
+    for (int i = 0; i < len; i++) {
+        if (flag[1] == array[i].flag) {
             path = array[i].path;
             temp = array[i].args;
             flagFound = 1;
