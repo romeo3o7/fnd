@@ -1,6 +1,4 @@
 #include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include "include/package.h"
 #include "include/update.h"
 
@@ -33,18 +31,18 @@ int main (int argc, char *argv[]) {
 }
 
 void echo_package() {
-        fprintf(stderr, "  Structure: Package <option> <package/file>\n");
-        fprintf(stderr, "  Options:\n");
-        fprintf(stderr, "  < -f for installed >:   the files this package has installed.\n");
-        fprintf(stderr, "  < -m for metadata>:     the metadata of the package \n");
-        fprintf(stderr, "  < -d for depndency:     what this package requires to run\n");
-        fprintf(stderr, "  < -r for required:      packages that require it\n");
-        fprintf(stderr, "  < -o for own>:          packages who owns this file\n");
+        printf("  Structure: Package <option> <package/file>\n");
+        printf("  Options:\n");
+        printf("  < -f for installed >:   the files this package has installed.\n");
+        printf("  < -m for metadata>:     the metadata of the package \n");
+        printf("  < -d for depndency:     what this package requires to run\n");
+        printf("  < -r for required:      packages that require it\n");
+        printf("  < -o for own>:          packages who owns this file\n");
 }
 
 void echo_general() {
-    fprintf(stderr, "  Commands:\n");
-    fprintf(stderr, "  update:           update manager\n");
-    fprintf(stderr, "  package utility : package <flag> <package || file>\n");
-    fprintf(stderr, "  Use 'package' alone for flag details\n");
+    printf("  Commands:\n");
+    printf("  update:           update manager\n");
+    printf("  package utility : package <flag> <package || file>\n");
+    printf("  Use 'package' alone for flag details\n");
 }
