@@ -56,3 +56,13 @@ fnd package <flag> <package>
 fnd package -d bash # returns packages bash needs, example output: libc.so.6, rpmlib, rtld	
 fnd package -o /usr/bin/ls # returns coreutils-9 as the owner 
 ```
+or 
+
+```bash
+fnd package -o $(which kill) #returns util-linux-core-2 as the rightful owner
+```
+or you don't know the excat package name, and you want to know the files it installed 
+
+```bash
+fnd package -f $(fnd package -o $(which nvim)) #here i didn't know/forgot nvim full package name (neovim), ( which nvim ) returns /usr/bin/nvim, and -o checks for owner
+```
