@@ -1,26 +1,26 @@
 #include "../include/package.h"
+#include <sys/types.h>
 
 static operations installed[] = {
-    {'f' , "rpm" , {"rpm", "-ql"} },
-    {'m' , "rpm" , {"rpm", "-qi"} },
-    {'d' , "rpm" , {"rpm", "-qR"} },
-    {'r' , "rpm" , {"rpm", "-q", "--whatrequires"} },
-    {'o' , "rpm" , {"rpm", "-qf"}},
+    {'f' , "rpm" , {"rpm", "-ql", NULL} },
+    {'m' , "rpm" , {"rpm", "-qi", NULL} },
+    {'d' , "rpm" , {"rpm", "-qR", NULL} },
+    {'r' , "rpm" , {"rpm", "-q", "--whatrequires" , NULL} },
+    {'o' , "rpm" , {"rpm", "-qf" , NULL}},
 };
 static operations notInstalled[] = {
-    {'f' , "dnf" , {"dnf", "repoquery" , "-l"} },
-    {'m' , "dnf" , {"dnf", "info"} },
-    {'d' , "dnf" , {"dnf", "repoquery" , "--requires"} },
-    {'r' , "dnf" , {"dnf", "repoquery", "--whatrequires"} },
-    {'o' , "dnf" , {"dnf", "provides"}},
+    {'f' , "dnf" , {"dnf", "repoquery" , "-l" , NULL} },
+    {'m' , "dnf" , {"dnf", "info", NULL} },
+    {'d' , "dnf" , {"dnf", "repoquery" , "--requires" , NULL} },
+    {'r' , "dnf" , {"dnf", "repoquery", "--whatrequires" , NULL} },
+    {'o' , "dnf" , {"dnf", "provides", NULL}},
 };
 
 int packageAnalysis(const char* flag, char *package) {
     operations *array = checkInstalled(package) ? installed : notInstalled;
-    int len = sizeof array + sizeof array[0];
     bool flagFound = 0;
     char * path, *arg[8], **temp;
-    for (int i = 0; i < len; i++) {
+    for (int i = 0; i < 5; i++) {
         if (flag[1] == array[i].flag) {
             path = array[i].path;
             temp = array[i].args;
@@ -41,7 +41,11 @@ int packageAnalysis(const char* flag, char *package) {
 }
 
 bool checkInstalled(char *package) { // if this function returns 1 we query rpm, otherwise we query dnf
-    size_t len = strlen(package);
+    unsigned int len = 0;
+    while(package[len] != '\0') {
+        len++;
+    }
+
     for (size_t i = 0; i < len; i++ ) {
         if (package[i] == '/') return access(package, F_OK) == 0; // if package has / then its a file, access to return 1 if it exists
     }
