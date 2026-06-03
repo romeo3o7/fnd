@@ -1,8 +1,10 @@
 #include "../include/file.h"
 
-int cacheCount() {
-    char buffer = '0';
-    char values[] = {'1','2','3','4'}; // possible values
+    const char *welcomeMsg = "!THIS IS READ ONLY FILE! \n\nhello! this file is a storage used for fnd cache counter\nthe Value : ";
+
+    int cacheCount() {
+
+    int returnValue = 0;
 
     const char *home = getenv("HOME"); // get the home path
     const char *file = "/.cache/fnd/cacheClearingCounter"; // path where the file should go
@@ -14,31 +16,61 @@ int cacheCount() {
     int fd = open(filePath, O_CREAT | O_RDWR , 00600); // open the file fd or create it
     if ( fd < 0 ) {
         perror("failed to open/create file");
-        buffer = -1;
+        returnValue = -1;
         goto exit;
     }
 
-    if (readValue(fd, &buffer) == 0) {   //if file is empty
-        writeValue(fd, &values[0]); // write 1 to the file
+    char values[] = {'1','2','3','4'}; // possible values
+
+    unsigned int sizeNeeded = snprintf(NULL, 0, "%s" , welcomeMsg );
+    char *peak = malloc(sizeNeeded + 2); // the string takes the needed size and + 1 for the value +1 for \0
+    if (!peak) {
+        returnValue = -1;
         goto exit;
     }
 
-    if (buffer == '1') {
-        writeValue(fd, &values[1]);
-    } else if (buffer == '2') {
-        writeValue(fd, &values[2]);
-    } else if (buffer == '3') {
-        writeValue(fd, &values[3]);
-    } else if (buffer == '4') {
-        writeValue(fd, &values[0]);
+
+    if (read(fd , peak , sizeNeeded + 1) == 0) {   //if file is empty
+        write(fd, welcomeMsg , sizeNeeded); // write msg to the file
+        free(peak);
+        lseek(fd,sizeNeeded,SEEK_SET);
+        write(fd, &values[0] , 1);
+        goto exit;
     }
+
+    char buffer = peak[sizeNeeded];
+    free(peak);
+
+    writeValue(fd ,buffer , sizeNeeded , values);
+    returnValue = buffer - '0';
 
     exit:
     free(dir);
     free(filePath);
     close(fd);
+    return returnValue;
+}
 
-    return buffer - '0';
+int writeValue(int fd , char buffer , unsigned int size , char *values) {
+    lseek(fd, size, SEEK_SET);
+    switch (buffer) {
+        case'1':
+        if (write(fd, &values[1] ,sizeof buffer) < 0 ) return -1;
+        break;
+        case'2':
+        if (write(fd, &values[2] ,sizeof buffer) < 0 ) return -1;
+        break;
+        case'3':
+        if (write(fd, &values[3] ,sizeof buffer) < 0 ) return -1;
+        break;
+        case'4':
+        if (write(fd, &values[0] ,sizeof buffer) < 0 ) return -1;
+        break;
+        default:
+        if (write(fd, &values[0] ,sizeof buffer) < 0 ) return -1;
+        break;
+    }
+    return 0;
 }
 
 int createDirctory(const char *s) {
@@ -69,14 +101,4 @@ char * concatStrings(const char *s1 , const char *s2) {
     char *result = malloc(sizeNedded + 1);
     snprintf(result,sizeNedded + 1,"%s%s" , s1 , s2);
     return result;
-}
-
-int readValue(int fd , char *buffer) {
-    lseek(fd,0,SEEK_SET);
-    return read(fd, buffer, sizeof(char));
-}
-
-void writeValue(int fd , char* value) {
-    lseek(fd,0,SEEK_SET);
-    write(fd , value , sizeof(char) );
 }

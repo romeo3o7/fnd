@@ -10,8 +10,7 @@
 
 int cacheCount();
 char * concatStrings(const char *s1 , const char *s2);
-void writeValue(int fd , char* value);
+int writeValue(int fd , char buffer , unsigned int size , char *values);
 int createDirctory(const char *s);
-int readValue(int fd , char *buffer);
 char * concatStrings(const char *s1 , const char *s2);
 #endif
