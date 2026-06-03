@@ -1,9 +1,10 @@
 #include "../include/file.h"
 
-    const char *welcomeMsg = "!THIS IS READ ONLY FILE! \n\nhello! this file is a storage used for fnd cache counter\nthe Value : ";
+const char *welcomeMsg = "!THIS IS READ ONLY FILE! \n\nhello! this file is a storage used for fnd cache counter\nthe Value : ";
 
-    int cacheCount() {
-
+int cacheCount() {
+    char values[] = {'1','2','3','4'}; // possible values
+    char buffer = '0';
     int returnValue = 0;
 
     const char *home = getenv("HOME"); // get the home path
@@ -20,34 +21,27 @@
         goto exit;
     }
 
-    char values[] = {'1','2','3','4'}; // possible values
-
     unsigned int sizeNeeded = snprintf(NULL, 0, "%s" , welcomeMsg );
-    char *peak = malloc(sizeNeeded + 2); // the string takes the needed size and + 1 for the value +1 for \0
-    if (!peak) {
-        returnValue = -1;
-        goto exit;
-    }
 
+    struct stat statbuff;
+    fstat(fd , &statbuff);
 
-    if (read(fd , peak , sizeNeeded + 1) == 0) {   //if file is empty
-        write(fd, welcomeMsg , sizeNeeded); // write msg to the file
-        free(peak);
-        lseek(fd,sizeNeeded,SEEK_SET);
-        write(fd, &values[0] , 1);
-        goto exit;
-    }
+    if (statbuff.st_size == 0) {   // if file is empty,
+	write(fd, welcomeMsg , sizeNeeded);
+	write(fd, &values[0] , 1);
+	goto exit;
+    } else {
+	lseek(fd, sizeNeeded , SEEK_SET); // go to after the string
+	read(fd , &buffer , 1);
+    	}
 
-    char buffer = peak[sizeNeeded];
-    free(peak);
-
-    writeValue(fd ,buffer , sizeNeeded , values);
+    writeValue(fd , buffer , sizeNeeded , values);
     returnValue = buffer - '0';
 
     exit:
     free(dir);
     free(filePath);
-    close(fd);
+    if (fd >= 0)close(fd);
     return returnValue;
 }
 
