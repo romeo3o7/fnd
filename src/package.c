@@ -18,17 +18,14 @@ static operations notInstalled[] = {
 
 int packageAnalysis(const char* flag, char *package) {
     operations *array = checkInstalled(package) ? installed : notInstalled;
-    bool flagFound = 0;
-    char * path, *arg[8], **temp;
+    char * path, *arg[8], **temp = NULL;
     for (int i = 0; i < 5; i++) {
         if (flag[1] == array[i].flag) {
             path = array[i].path;
             temp = array[i].args;
-            flagFound = 1;
             break;
         }
     }
-    if (!flagFound) return 400;
     int t = 0;
     while ( t < 6 && temp[t] != NULL  ) {
         arg[t] = temp[t];
