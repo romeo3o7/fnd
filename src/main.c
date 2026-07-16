@@ -22,7 +22,7 @@ int main (int argc, char *argv[]) {
 
         case 3:
             if (strcmp(argv[1],"package") == 0) {
-                fprintf(stderr,"Make sure the flag is right and specify package/file");
+                fprintf(stderr,"Make sure the flag is right and specify package/file\n");
             } else {
                 echo_general();
             }

@@ -2,7 +2,7 @@
 
 build:
 	mkdir -p build
-	gcc -Wall -Wextra -O2 main.c src/package.c src/update.c src/child.c src/file.c -o build/fnd
+	gcc -Wall -Wextra -O2 src/main.c src/package.c src/update.c src/child.c src/file.c -o build/fnd
 
 rebuild: clean build
 
