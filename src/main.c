@@ -1,6 +1,6 @@
 #include <string.h>
-#include "include/package.h"
-#include "include/update.h"
+#include "../include/package.h"
+#include "../include/update.h"
 
 void echo_general();
 
@@ -22,7 +22,7 @@ int main (int argc, char *argv[]) {
 
         case 3:
             if (strcmp(argv[1],"package") == 0) {
-                fprintf(stderr,"You didn't specify a path/package\n");
+                fprintf(stderr,"Make sure the flag is right and specify package/file");
             } else {
                 echo_general();
             }
@@ -50,12 +50,13 @@ int main (int argc, char *argv[]) {
 
 void echo_general() {
         printf("Commands:\n");
-        printf("update:             update with no subcommands manages system update\n");
+        printf("update:\n");
+        printf("updates with no subcommands; manages system update\n\n");
         printf("Package: \nStructure: <option> <package/file>\n");
         printf("Options:\n");
         printf("< -f for installed >:   what files the package installs.\n");
-        printf("< -m for metadata>:     the metadata of the package \n");
-        printf("< -d for depndency:     what this package depends on \n");
-        printf("< -r for requires:      what requires this package\n");
-        printf("< -o for own>:          who owns this file (only for files)\n");
+        printf("< -m for metadata  >:   the metadata of the package \n");
+        printf("< -d for depndency >:   what this package depends on \n");
+        printf("< -r for requires  >:   what requires this package\n");
+        printf("< -o for own       >:   who owns this file (only for files)\n");
 }
