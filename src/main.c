@@ -32,10 +32,11 @@ int main (int argc, char *argv[]) {
         case 4:
            if (strcmp(argv[1] , "package") == 0 ) {
                char *flag = argv[2];
-               char *string = "fmdro";
+               char *string[6] = {"f","m","d","r","o"};
+
                for (int i = 0; i <= 4; i++){
-                  if (flag[1] == string[i]) {
-                       return packageAnalysis(argv[2],argv[3]);
+				  if (strcmp(flag, string[i]) == 0 ) {
+                       return packageAnalysis(flag,argv[3]);
                   }
                }
                status = 1;
@@ -54,9 +55,9 @@ void echo_general() {
         printf("updates with no subcommands; manages system update\n\n");
         printf("Package: \nStructure: <option> <package/file>\n");
         printf("Options:\n");
-        printf("< -f for installed >:   what files the package installs.\n");
-        printf("< -m for metadata  >:   the metadata of the package \n");
-        printf("< -d for depndency >:   what this package depends on \n");
-        printf("< -r for requires  >:   what requires this package\n");
-        printf("< -o for own       >:   who owns this file (only for files)\n");
+        printf("f for installed :   what files the package installs.\n");
+        printf("m for metadata  :   the metadata of the package \n");
+        printf("d for depndency :   what this package depends on \n");
+        printf("r for requires  :   what requires this package\n");
+        printf("o for own       :   who owns this file (only for files)\n");
 }

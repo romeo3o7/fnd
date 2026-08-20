@@ -34,14 +34,14 @@ int update() {
     char buffer[8];
     int reboot = 0;
     while(1) {
-        printf("[l]ocal , o[f]fline , [c]ancel [l/f/c]? ");
+        printf("[l]ocal , [o]ffline , [c]ancel [l/f/c]? ");
         fflush(stdout);
         char *input= fgets(buffer, sizeof(buffer) , stdin);
         if (input == NULL) return -1;
         char c = tolower(buffer[0]);
-        if (c == 'l' || c == 'f') {
-            update = (c == 'f') ?  offline : online;  // update equals offline if the conditon is true
-            reboot = (c == 'f');                      // if c equals f : reboot = true or 1
+        if (c == 'l' || c == 'o') {
+            update = (c == 'o') ?  offline : online;  // update equals offline if the conditon is true
+            reboot = (c == 'o');                      // if c equals o : reboot = true or 1
             break;
         } else if (c == 'c') exit(0);
     }
