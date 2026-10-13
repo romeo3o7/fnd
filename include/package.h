@@ -13,5 +13,4 @@ typedef struct {
 } operations;
 
 int packageAnalysis(const char* flag, char *package);
-bool checkInstalled(char *package);
 #endif

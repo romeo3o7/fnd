@@ -2,7 +2,17 @@
 #include "../include/package.h"
 #include "../include/update.h"
 
-void echo_general();
+static void echo_general(void) {
+		char msg[] = "fnd update:\tmanages system update\n"
+			"fnd package <option> <package/file>:\nchecks for package/file specifed option\n\n"
+			"options:\n"
+			"f\twhat files the package installed\n"
+			"m\tthe metadata of the package\n"
+			"d\twhat this package depends on\n"
+			"r\twhat requires this package\n"
+			"o\twho owns this file (only for\n";
+        printf("%s",msg);
+}
 
 int main (int argc, char *argv[]) {
     int status = 0;
@@ -44,20 +54,9 @@ int main (int argc, char *argv[]) {
                break;
            }
            echo_general();
+		   break;
+		default: break;
     }
 
     return status;
-}
-
-void echo_general() {
-        printf("Commands:\n");
-        printf("update:\n");
-        printf("updates with no subcommands; manages system update\n\n");
-        printf("Package: \nStructure: <option> <package/file>\n");
-        printf("Options:\n");
-        printf("f for installed :   what files the package installs.\n");
-        printf("m for metadata  :   the metadata of the package \n");
-        printf("d for depndency :   what this package depends on \n");
-        printf("r for requires  :   what requires this package\n");
-        printf("o for own       :   who owns this file (only for files)\n");
 }

@@ -1,17 +1,6 @@
 #include "../include/update.h"
 
-int invoke_update() {
-    int checkUpdateStatus = checkUpdate();
-    if (checkUpdateStatus != 1 ) return checkUpdateStatus;
-    int updateStaus = update();
-    if (updateStaus == -1) return -1;
-    if ( clearCache() == -1 ) return -1;
-    clearOrphans();
-    if (updateStaus == 1) return offlineActions();
-    return 0;
-}
-
-int checkUpdate() {
+static int checkUpdate(void) {
     printf("Checking update...\n");
     char *updateChecking[] = {"sudo" , "dnf" , "check-update" , "--refresh" , NULL};
     int checkStatus = task("sudo",updateChecking);
@@ -25,7 +14,7 @@ int checkUpdate() {
     return 1;
 }
 
-int update() {
+static int update(void) {
     printf("update found!\n");
     printf("would you like an offline or local update?\n");
     printf("offline if the update includes: kernel,libc,systemd,mesa.\n");
@@ -38,7 +27,7 @@ int update() {
         fflush(stdout);
         char *input= fgets(buffer, sizeof(buffer) , stdin);
         if (input == NULL) return -1;
-        char c = tolower(buffer[0]);
+        int c = tolower(buffer[0]);
         if (c == 'l' || c == 'o') {
             update = (c == 'o') ?  offline : online;  // update equals offline if the conditon is true
             reboot = (c == 'o');                      // if c equals o : reboot = true or 1
@@ -55,7 +44,7 @@ int update() {
     return reboot;
 }
 
-int clearCache() { // improvment to only delete all packages on the third update
+static int clearCache(void) { // improvment to only delete all packages on the third update
     printf("clearing cache .. : ");
     fflush(stdout);
     int cacheStatus = cacheCount();
@@ -68,21 +57,21 @@ int clearCache() { // improvment to only delete all packages on the third update
     return 0;
 }
 
-int clearOrphans() {
+static int clearOrphans(void) {
     printf("deleting orphaned packages : ");
     fflush(stdout);
     char *arguments[] = {"sudo" , "dnf" , "autoremove" , NULL};
     int orphanStatus = task("sudo" , arguments);
     return orphanStatus;
 }
-int offlineActions() {
+static int offlineActions(void) {
     char buffer[8];
     while (1) {
         printf("Offline transactions are avaliable would you like to update now [y/n]?  ");
         fflush(stdout);
         char *input = fgets(buffer, sizeof(buffer),stdin);
         if (input == NULL)     return -1;
-        char c = tolower(buffer[0]);
+        int c = tolower(buffer[0]);
         if (c == 'n')          return 0;
         if (c == 'y')          break;
     }
@@ -93,4 +82,15 @@ int offlineActions() {
         return 1;
     }
    return 0;
+}
+
+int invoke_update(void) {
+    int checkUpdateStatus = checkUpdate();
+    if (checkUpdateStatus != 1 ) return checkUpdateStatus;
+    int updateStaus = update();
+    if (updateStaus == -1) return -1;
+    if ( clearCache() == -1 ) return -1;
+    clearOrphans();
+    if (updateStaus == 1) return offlineActions();
+    return 0;
 }

@@ -6,6 +6,6 @@
 #include "../include/child.h"
 #include "../include/file.h"
 
-int invoke_update(), update() , checkUpdate() , clearCache() , offlineActions() , clearOrphans();
+int invoke_update(void);
 
 #endif
