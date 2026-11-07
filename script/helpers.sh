@@ -1,12 +1,16 @@
-check_status() {
-    local status_in=$1 invoker=$2
-    if (( status_in != 0 )); then
-        printf '%s : failed\n' "$invoker" >&2
-        return 1
-    fi
-    return 0
-}
+usage() {
+cat <<'EOF'
+fnd up : manages system update
 
+fnd p <flag> <package/file> : checks for package/file specifed flag
+flags:
+	m	;ackage metadata
+	d	package dependency
+	r	package requirement
+	i	package files installed
+	o	package file-ownership
+EOF
+}
 confirmation() {
     # confirmation "msg" "prompt"
     # returns 0 for yes, 2 for no, 3 for quit, 1 on EOF/error
@@ -22,7 +26,6 @@ confirmation() {
         case "${reply,,}" in
             y) return 0 ;;
             n) return 2 ;;
-            q) return 3 ;;
             *) printf 'Invalid choice\n' >&2 ;;
         esac
     done
