@@ -1,48 +1,46 @@
 _package() {
-	local flag=$1 obj=$2
-	rpm -q "$obj" >/dev/null 2>&1
-	local installed=$?
-	case ${flag,,} in
-		i)
-			if [[ "$installed" -eq 0 ]]; then
-				rpm -ql "$obj"
-			else
-				dnf repoquery -l "$obj"
-			fi
-		;;
-		r)
-			if [[ "$installed" -eq 0 ]]; then
-				rpm -q --whatrequires "$obj"
-			else
-				dnf repoquery --whatrequires "$obj"
-			fi
+    local flag=$1 obj=$2
+    local -a rpm_cmd dnf_cmd
+    local use_rpm=0
 
+    case ${flag,,} in
+        in)
+			rpm_cmd=(rpm -ql)
+			dnf_cmd=(dnf repoquery -l)
 		;;
-		d)
-			if [[ "$installed" -eq 0 ]]; then
-				rpm -qR "$obj"
-			else
-				dnf repoquery --requires "$obj"
-			fi
+        req)
+			rpm_cmd=(rpm -q --whatrequires)
+			dnf_cmd=(dnf repoquery --whatrequires)
 		;;
-		m)
-			if [[ "$installed" -eq 0 ]]; then
-				rpm -qi "$obj"
-			else
-				dnf info "$obj"
-			fi
+        dep)
+			rpm_cmd=(rpm -qR)
+			dnf_cmd=(dnf repoquery --requires)
 		;;
-		o)
-			if [[ "$installed" -eq 0 ]]; then
-				rpm -qf "$obj"
-			else
-				dnf provides "$obj"
-			fi
-
+        meta)
+			rpm_cmd=(rpm -qi)
+			dnf_cmd=(dnf info)
 		;;
-		*)
+        own)
+			rpm_cmd=(rpm -qf)
+			dnf_cmd=(dnf provides)
+		;;
+        *)
 			printf 'unrecognized flag\n' >&2
 			return 1
 		;;
-	esac
+    esac
+
+	 if [[ ${flag,,} == own ]]; then
+        if [[ -e $obj ]]; then
+			use_rpm=1
+		fi
+    elif rpm -q -- "$obj" >/dev/null 2>&1; then
+        use_rpm=1
+    fi
+
+    if (( use_rpm )); then
+        "${rpm_cmd[@]}" "$obj"
+    else
+        "${dnf_cmd[@]}" "$obj"
+    fi
 }

@@ -4,11 +4,11 @@ fnd up : manages system update
 
 fnd p <flag> <package/file> : checks for package/file specifed flag
 flags:
-	m	;ackage metadata
-	d	package dependency
-	r	package requirement
-	i	package files installed
-	o	package file-ownership
+	meta	package metadata
+	dep 	package dependency
+	req 	package requirement
+	in  	package files installed
+	own 	package file-ownership
 EOF
 }
 confirmation() {
