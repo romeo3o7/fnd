@@ -2,12 +2,12 @@ usage() {
 cat <<'EOF'
 fnd up : manages system update
 
-fnd p <flag> <package/file> : checks for package/file specifed flag
+fnd pkg <flag> <package/file> : checks for package/file specifed flag
 flags:
 	meta	package metadata
 	dep 	package dependency
 	req 	package requirement
-	in  	package files installed
+	ins  	package installed files
 	own 	package file-ownership
 EOF
 }

@@ -12,7 +12,7 @@ __main() {
 				return 1
 			fi
 		;;
-		p)
+		pkg)
 			if [[ -z ${2:-} || -z ${3:-} ]]; then
 				printf 'flag or package/file name not provided\n' >&2
 				return 1

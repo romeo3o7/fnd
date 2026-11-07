@@ -4,7 +4,7 @@ _package() {
     local use_rpm=0
 
     case ${flag,,} in
-        in)
+        ins)
 			rpm_cmd=(rpm -ql)
 			dnf_cmd=(dnf repoquery -l)
 		;;
