@@ -30,3 +30,14 @@ confirmation() {
         esac
     done
 }
+
+check_command() {
+	local cmd
+	local -a commands=("$@")
+	for cmd in "${commands[@]}"; do
+		if ! command -v "$cmd" >/dev/null 2>&1; then
+			printf 'command: %s not found\n' "$cmd" >&2
+			return 1
+		fi
+	done
+}

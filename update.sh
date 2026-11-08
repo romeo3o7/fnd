@@ -32,6 +32,9 @@ _preformUpdate() {
                     return 0
                     ;;
                 o)
+					if ! check_command dnf5; then
+						return 1
+					fi
                     if ! sudo dnf upgrade --offline; then
 						return 1
 					fi
