@@ -1,4 +1,4 @@
-invoke_update() {
+_invoke_update() {
     local rv=0
     dnf check-update --refresh
     rv=$?

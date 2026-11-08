@@ -3,16 +3,16 @@ __main() {
 	set -uo pipefail
 	script_path=$(readlink -f "${BASH_SOURCE[0]}")
 	script_dir=$(dirname "$script_path")
-	for module in update helpers package; do
-		source "$script_dir/$module.sh"
-	done
+	source "$script_dir/helpers.sh"
 	case "${1:-}" in
 		up)
-			if ! invoke_update; then
+			source "$script_dir/update.sh"
+			if ! _invoke_update; then
 				return 1
 			fi
 		;;
 		pkg)
+			source "$script_dir/package.sh"
 			if [[ -z ${2:-} || -z ${3:-} ]]; then
 				printf 'flag or package/file name not provided\n' >&2
 				return 1

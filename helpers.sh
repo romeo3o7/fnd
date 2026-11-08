@@ -13,9 +13,9 @@ EOF
 }
 confirmation() {
     # confirmation "msg" "prompt"
-    # returns 0 for yes, 2 for no, 3 for quit, 1 on EOF/error
+    # returns 0 for yes, 2 for no, 1 on EOF/error
     local msg=$1 prompt=$2 reply
-    if [[ -z $msg && -z $prompt ]]; then
+    if [[ -z $msg || -z $prompt ]]; then
         return 1
     fi
 
